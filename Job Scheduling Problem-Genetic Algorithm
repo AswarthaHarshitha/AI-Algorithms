@@ -1,0 +1,41 @@
+import random
+machines = 3  
+population_size = 10  
+generations = 100
+mutation_rate = 0.1  
+def random_schedule():
+    return [random.randint(0, machines - 1) for _ in jobs]  # Assign jobs to machines
+def create_population():
+    return [random_schedule() for _ in range(population_size)]
+def get_makespan(schedule):
+    machine_time = [0] * machines  
+    for job, machine in zip(jobs, schedule):
+        machine_time[machine] += job  
+    return max(machine_time)  
+def select_best(population):
+    return sorted(population, key=get_makespan)[:population_size // 2]  
+def crossover(parent1, parent2):
+    point = random.randint(1, len(jobs) - 2)  
+    return parent1[:point] + parent2[point:], parent2[:point] + parent1[point:]
+def mutate(schedule):
+    if random.random() < mutation_rate:  
+        i = random.randint(0, len(jobs) - 1)  
+        schedule[i] = random.randint(0, machines - 1)  
+def run_algorithm():
+    population = create_population()
+    for _ in range(generations): 
+        best_schedules = select_best(population) 
+        new_schedules = []
+
+        while len(new_schedules) < population_size:  
+            parent1, parent2 = random.sample(best_schedules, 2)
+            child1, child2 = crossover(parent1, parent2)
+            mutate(child1)
+            mutate(child2)
+            new_schedules.extend([child1, child2])
+        population = new_schedules[:population_size]
+    best_schedule = min(population, key=get_makespan)
+    return best_schedule, get_makespan(best_schedule)
+best_schedule, best_time = run_algorithm()
+print("Best Job Schedule:", best_schedule)
+print("Minimum Time:", best_time, "units")
