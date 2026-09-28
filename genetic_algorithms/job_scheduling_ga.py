@@ -1,4 +1,5 @@
 import random
+jobs = [4, 8, 3, 7, 2, 6, 5, 9]  # processing time of each job
 machines = 3  
 population_size = 10  
 generations = 100
